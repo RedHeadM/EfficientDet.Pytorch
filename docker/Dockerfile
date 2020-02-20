@@ -13,6 +13,6 @@ RUN pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=Pyt
 
 
 WORKDIR /app
-RUN pyton models/efficientnet.py
+RUN python models/efficientnet.py
 #ENTRYPOINT ["/bin/bash"]
 
