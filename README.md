@@ -136,7 +136,9 @@ python demo.py --threshold 0.5 --iou_threshold 0.5 --cam --score --weight checkp
 ## Performance
 <img src= "./docs/compare.png"/>
 
-
+## Docker
+docker build -t effnet  -f docker/Dockerfile .
+docker run -i --rm -v "$(pwd):/app" --runtime=nvidia --name effnettrain effnet python train.py --dataset COCO --dataset_root ~/data/coco/ --network effcientdet-d0 --batch_size 32
 
 ## TODO
 We have accumulated the following to-do list, which we hope to complete in the near future
