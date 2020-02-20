@@ -13,7 +13,7 @@ RUN pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=Pyt
 
 
 WORKDIR /tmp
-RUN python models/efficientnet.py
+RUN python load_pretrained.py
 WORKDIR /app
 #ENTRYPOINT ["/bin/bash"]
 
