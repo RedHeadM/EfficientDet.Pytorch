@@ -16,7 +16,7 @@ TRAIN_DATASET:
     PY: datasets
     CLASS: spoofDataset
     ARGS:
-        root_dir: ./
+        root_dir: /home/psiori/psipy-computervision/data/detect/
         phase: train
 
 VALID_DATASET:
