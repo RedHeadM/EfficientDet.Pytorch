@@ -1,5 +1,6 @@
 FROM pytorch/pytorch:latest
 # install
+EXPOSE 80
 RUN apt-get update --fix-missing
 RUN apt-get install -y protobuf-compiler python-pil python-lxml git wget unzip screen vim libgtk2.0-dev
 
