@@ -12,7 +12,8 @@ RUN pip install -r /tmp/requirements.txt
 RUN pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
 
 
-WORKDIR /app
+WORKDIR /tmp
 RUN python /tmp/models/efficientnet.py
+WORKDIR /app
 #ENTRYPOINT ["/bin/bash"]
 
