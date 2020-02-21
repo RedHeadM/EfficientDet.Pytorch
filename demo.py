@@ -10,6 +10,7 @@ from datasets import get_augumentation, VOC_CLASSES
 from timeit import default_timer as timer
 import argparse
 import copy
+import numpy as np
 from utils import vis_bbox, EFFICIENTDET
 # import onnx
 # import onnxruntime
@@ -114,10 +115,13 @@ class Detect(object):
         img = img.unsqueeze(0)
         print(img.shape)
         with torch.no_grad():
+            ftime= []
             for _ in range(10):
                 st= time.time()
                 scores, classification, transformed_anchors = self.model(img)
-                print("forward time pytorch {} device {}".format(st-time.time(),self.device))
+                time_pass= time.time()-st
+                ftime.append(time_pass)
+            print("forward time pytorch {} device {}".format(np.mean(ftime),self.device))
             # a=self._onnx_mdl(img)
             bboxes = list()
             labels = list()
