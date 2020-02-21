@@ -15,7 +15,7 @@ from utils import vis_bbox, EFFICIENTDET
 # import onnx
 # import onnxruntime
 import time
-# from torch2trt import torch2kkjrt
+from torch2trt import torch2trt
 parser = argparse.ArgumentParser(description='EfficientDet')
 
 parser.add_argument('-n', '--network', default='efficientdet-d0',
@@ -75,8 +75,8 @@ class Detect(object):
         self.model.eval()
         self._tensror_rt= use_tensorrt
 
-        # if use_tensorrt:
-            # # self.model= torch2trt(self.model)
+        if use_tensorrt:
+            self.model= torch2trt(self.model)
             # # Export the model
             # batch_size=1
             # x = torch.randn(batch_size, 3, 512, 512, requires_grad=True)
