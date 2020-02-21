@@ -114,9 +114,10 @@ class Detect(object):
         img = img.unsqueeze(0)
         print(img.shape)
         with torch.no_grad():
-            st= time.time()
-            scores, classification, transformed_anchors = self.model(img)
-            print("forward time pytorch {.1} device {}".format(st-time.time(),self.device))
+            for _ in range(10):
+                st= time.time()
+                scores, classification, transformed_anchors = self.model(img)
+                print("forward time pytorch {} device {}".format(st-time.time(),self.device))
             # a=self._onnx_mdl(img)
             bboxes = list()
             labels = list()
