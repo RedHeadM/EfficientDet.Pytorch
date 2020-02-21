@@ -75,7 +75,7 @@ class Detect(object):
         self.model.eval()
         self._tensror_rt= use_tensorrt
 
-        if use_tensorrt:
+        if use_tensorrt and False:
             x = torch.randn(3, 512, 512, requires_grad=True)
             self.model= torch2trt(self.model,[x])
             # # Export the model
