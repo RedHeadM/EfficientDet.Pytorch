@@ -116,7 +116,7 @@ class Detect(object):
         print(img.shape)
         with torch.no_grad():
             ftime= []
-            for _ in range(10):
+            for _ in range(100):
                 st= time.time()
                 scores, classification, transformed_anchors = self.model(img)
                 time_pass= time.time()-st
