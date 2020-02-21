@@ -11,8 +11,8 @@ from timeit import default_timer as timer
 import argparse
 import copy
 from utils import vis_bbox, EFFICIENTDET
-import onnx
-import onnxruntime
+# import onnx
+# import onnxruntime
 import time
 # from torch2trt import torch2kkjrt
 parser = argparse.ArgumentParser(description='EfficientDet')
