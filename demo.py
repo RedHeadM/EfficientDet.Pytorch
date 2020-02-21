@@ -77,6 +77,7 @@ class Detect(object):
 
         if use_tensorrt :
             x = torch.randn(1,3, 512, 512, requires_grad=True)
+            self.model.backbone.set_swish(memory_efficient=False)
             if torch.cuda.is_available():
                 x=x.cuda()
             self.model= torch2trt(self.model,[x])
@@ -84,7 +85,6 @@ class Detect(object):
             # batch_size=1
             # x = torch.randn(batch_size, 3, 512, 512, requires_grad=True)
             # # x = self.transform(to_x)
-            # self.model.backbone.set_swish(memory_efficient=False)
             # torch.onnx.export(self.model,               # model being run
                   # x,                         # model input (or a tuple for multiple inputs)
                   # "super_resolution.onnx",   # where to save the model (can be a file or file-like object)
