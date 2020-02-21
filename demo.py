@@ -77,6 +77,8 @@ class Detect(object):
 
         if use_tensorrt :
             x = torch.randn(1,3, 512, 512, requires_grad=True)
+            if torch.cuda.is_available():
+                x=x.cuda()
             self.model= torch2trt(self.model,[x])
             # # Export the model
             # batch_size=1
