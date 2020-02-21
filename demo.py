@@ -11,7 +11,10 @@ from timeit import default_timer as timer
 import argparse
 import copy
 from utils import vis_bbox, EFFICIENTDET
-
+import onnx
+import onnxruntime
+import time
+# from torch2trt import torch2kkjrt
 parser = argparse.ArgumentParser(description='EfficientDet')
 
 parser.add_argument('-n', '--network', default='efficientdet-d0',
@@ -33,12 +36,14 @@ parser.add_argument('--num_class', default=21, type=int,
 args = parser.parse_args()
 
 
+def to_numpy(tensor):
+    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
 class Detect(object):
     """
         dir_name: Folder or image_file
     """
 
-    def __init__(self, weights, num_class=21, network='efficientdet-d0', size_image=(512, 512)):
+    def __init__(self, weights, num_class=21, network='efficientdet-d0', size_image=(512, 512),use_tensorrt=True):
         super(Detect,  self).__init__()
         self.weights = weights
         self.size_image = size_image
@@ -67,6 +72,37 @@ class Detect(object):
         if torch.cuda.is_available():
             self.model = self.model.cuda()
         self.model.eval()
+        self._tensror_rt= use_tensorrt
+
+        # if use_tensorrt:
+            # # self.model= torch2trt(self.model)
+            # # Export the model
+            # batch_size=1
+            # x = torch.randn(batch_size, 3, 512, 512, requires_grad=True)
+            # # x = self.transform(to_x)
+            # self.model.backbone.set_swish(memory_efficient=False)
+            # torch.onnx.export(self.model,               # model being run
+                  # x,                         # model input (or a tuple for multiple inputs)
+                  # "super_resolution.onnx",   # where to save the model (can be a file or file-like object)
+                  # export_params=True,        # store the trained parameter weights inside the model file
+                  # opset_version=10,          # the ONNX version to export the model to
+                  # do_constant_folding=True,  # whether to execute constant folding for optimization
+                  # input_names = ['input'],   # the model's input names
+                  # output_names = ['output'], # the model's output names
+                  # dynamic_axes={'input' : {0 : 'batch_size'},    # variable lenght axes
+                                # 'output' : {0 : 'batch_size'}})
+            # onnx_model = onnx.load("super_resolution.onnx")
+            # onnx.checker.check_model(onnx_model)
+
+            # self._ort_session = onnxruntime.InferenceSession("super_resolution.onnx")
+
+
+    def _onnx_mdl(self,x):
+        # compute ONNX Runtime output prediction
+        print(self._ort_session.get_inputs())
+        ort_inputs = {self._ort_session.get_inputs()[0].name: to_numpy(x)}
+        return self._ort_session.run(None, ort_inputs)
+
 
     def process(self, file_name=None, img=None, show=False):
         if file_name is not None:
@@ -76,9 +112,12 @@ class Detect(object):
         img = augmentation['image']
         img = img.to(self.device)
         img = img.unsqueeze(0)
-
+        print(img.shape)
         with torch.no_grad():
+            st= time.time()
             scores, classification, transformed_anchors = self.model(img)
+            print("forward time pytorch {.1} device {}".format(ts-time.time(),self.device))
+            # a=self._onnx_mdl(img)
             bboxes = list()
             labels = list()
             bbox_scores = list()
