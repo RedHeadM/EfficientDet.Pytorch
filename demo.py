@@ -76,7 +76,7 @@ class Detect(object):
         self._tensror_rt= use_tensorrt
 
         if use_tensorrt and False:
-            x = torch.randn(3, 512, 512, requires_grad=True)
+            x = torch.randn(1,3, 512, 512, requires_grad=True)
             self.model= torch2trt(self.model,[x])
             # # Export the model
             # batch_size=1
