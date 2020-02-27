@@ -15,7 +15,7 @@ from utils import vis_bbox, EFFICIENTDET
 # import onnx
 # import onnxruntime
 import time
-from torch2trt import torch2trt
+# from torch2trt import torch2trt
 parser = argparse.ArgumentParser(description='EfficientDet')
 
 parser.add_argument('-n', '--network', default='efficientdet-d0',
@@ -44,7 +44,7 @@ class Detect(object):
         dir_name: Folder or image_file
     """
 
-    def __init__(self, weights, num_class=21, network='efficientdet-d0', size_image=(512, 512),use_tensorrt=True):
+    def __init__(self, weights, num_class=21, network='efficientdet-d0', size_image=(512, 512),use_tensorrt=False):
         super(Detect,  self).__init__()
         self.weights = weights
         self.size_image = size_image
@@ -118,13 +118,14 @@ class Detect(object):
         img = img.unsqueeze(0)
         print(img.shape)
         with torch.no_grad():
-            ftime= []
-            for _ in range(100):
-                st= time.time()
-                scores, classification, transformed_anchors = self.model(img)
-                time_pass= time.time()-st
-                ftime.append(time_pass)
-            print("forward time pytorch {} device {}".format(np.mean(ftime),self.device))
+            # ftime= []
+            # for _ in range(100):
+                # st= time.time()
+            scores, classification, transformed_anchors = self.model(img)
+                # scores, classification, transformed_anchors = self.model(img)
+                # time_pass= time.time()-st
+                # ftime.append(time_pass)
+            # print("forward time pytorch {} device {}".format(np.mean(ftime),self.device))
             # a=self._onnx_mdl(img)
             bboxes = list()
             labels = list()
